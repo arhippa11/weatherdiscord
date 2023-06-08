@@ -37,8 +37,20 @@ def globalconnector():
     weather_state = weatherstate.weatherstate(condition)
     print("Running the discord webhook...")
     message = ("**Weather **" + weather_state +"\n" +"**State of the weather in "+ name +":** " +  condition + "\n" + "**Temperature:** " + str(temp_c) + "°C" + "\n" + "**Feels like:** " + str(feelslike_c) + "°C" + "\n" + "**Wind speed:** " + str(wind_m_s) + "m/s" + "\n"  + "**Region:** " + region + "\n" + "**Country:** " + country + "\n" + "**Last updated** ("+ timezone +")** :**_ "+ last_updated+  "_\n" + "**Local time** ("+ timezone +")** :**_ " + localtime + "_")
-    webhook = DiscordWebhook(url=os.getenv("DISCORD_WEBHOOK_URL"), content=message)
-    response = webhook.execute()
+    #webhook = DiscordWebhook(url=os.getenv("DISCORD_WEBHOOK_URL"), content=message)
+    data = {
+        "content" : message,
+        "username" : "Weather",
+    }
+    url = os.getenv("DISCORD_WEBHOOK_URL")
+    result = requests.post(url, json = data)
+    try:
+        result.raise_for_status()
+    except requests.exceptions.HTTPError as err:
+        print(err)
+    else:
+        print("Payload delivered successfully, code {}.".format(result.status_code))
+    #response = webhook.execute()
 
 while True:
     globalconnector()
