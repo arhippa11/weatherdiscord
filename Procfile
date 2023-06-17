@@ -1,1 +1,1 @@
-worker: python globalconnector.py
+worker: python main.py
